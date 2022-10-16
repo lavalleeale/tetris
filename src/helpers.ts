@@ -1,4 +1,14 @@
-import { board, current } from "./globals";
+import { drawHold, drawNext } from "./drawing";
+import {
+  board,
+  canHold,
+  current,
+  held,
+  next,
+  setCanHold,
+  setCurrent,
+  setHeld,
+} from "./globals";
 import { shapes } from "./shapes";
 import { point, shape } from "./types";
 
@@ -47,4 +57,31 @@ export const hardDropPos = () => {
   }
 
   return dropAmount;
+};
+
+export const hold = () => {
+  if (canHold) {
+    const toBeHeld = {
+      shape: current.shape,
+      position: {
+        x: current.shape.startingPos.x,
+        y: current.shape.startingPos.y,
+      },
+      rotation: 0,
+    };
+    if (held === null) {
+      setHeld(toBeHeld);
+      setCurrent(next.pop()!);
+      if (next.length === 0) {
+        next.push(...generateBag());
+      }
+      drawNext();
+    } else {
+      const temp = held;
+      setHeld(current);
+      setCurrent(temp);
+    }
+    drawHold();
+    setCanHold(false);
+  }
 };

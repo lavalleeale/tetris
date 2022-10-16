@@ -1,9 +1,11 @@
 {
   "devDependencies": {
-    "esbuild": "^0.15.7"
+    "esbuild": "^0.15.7",
+    "gh-pages": "^4.0.0"
   },
   "scripts": {
     "build": "esbuild --bundle --minify src/index.ts --outfile=www/index.js",
+    "deploy": "gh-pages -d www",
     "watch": "esbuild --bundle src/index.ts --outfile=www/index.js --servedir=www"
   }
 }

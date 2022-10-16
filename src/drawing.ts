@@ -55,18 +55,20 @@ export const drawCleared = () => {
 };
 
 export const drawNext = () => {
+  const nextPiece = next[next.length - 1];
+  const nextRotation = nextPiece.shape.rotations[0];
+
   const blockSize = (sidebarWidth - 10) / 4;
+  // Get piece size to determine offset
+  const maxX = Math.max(...nextRotation.map((block) => block.x));
+  const offset = 5 + (blockSize / 2) * (3 - maxX);
+
   ctx.clearRect(rightSidebarStart + 5, 50, blockSize * 4, blockSize * 4);
-  ctx.fillStyle = next[next.length - 1].shape.color;
-  next[next.length - 1].shape.rotations[0].forEach((block) => {
-    const maxX = Math.max(
-      ...next[next.length - 1].shape.rotations[0].map((block) => block.x)
-    );
+  ctx.fillStyle = nextPiece.shape.color;
+
+  nextRotation.forEach((block) => {
     ctx.fillRect(
-      rightSidebarStart +
-        5 +
-        (blockSize / 2) * (3 - maxX) +
-        blockSize * block.x,
+      rightSidebarStart + offset + blockSize * block.x,
       50 + blockSize * block.y,
       blockSize - 2,
       blockSize - 2
@@ -76,12 +78,16 @@ export const drawNext = () => {
 
 export const drawHold = () => {
   const blockSize = (sidebarWidth - 10) / 4;
+  // Get piece size to determine offset
+  const maxX = Math.max(...held!.shape.rotations[0].map((block) => block.x));
+  const offset = 5 + (blockSize / 2) * (3 - maxX);
+
   ctx.clearRect(5, 50, blockSize * 4, blockSize * 4);
   ctx.fillStyle = held!.shape.color;
+
   held!.shape.rotations[0].forEach((block) => {
-    const maxX = Math.max(...held!.shape.rotations[0].map((block) => block.x));
     ctx.fillRect(
-      5 + (blockSize / 2) * (3 - maxX) + blockSize * block.x,
+      offset + blockSize * block.x,
       50 + blockSize * block.y,
       blockSize - 2,
       blockSize - 2
@@ -105,9 +111,13 @@ export const drawBoard = () => {
       );
     }
   }
+
+  // For each block in the board
   for (let row = 0; row < board.length; row++) {
     for (let column = 0; column < board[row].length; column++) {
       const tetromino = board[row][column];
+
+      // If block occupied
       if (tetromino !== null) {
         ctx.fillStyle = tetromino;
 
@@ -122,6 +132,7 @@ export const drawBoard = () => {
   }
 
   ctx.fillStyle = current.shape.color;
+  // For each block in current
   current.shape.rotations[current.rotation % 4].forEach((block) => {
     ctx.fillRect(
       (block.x + current.position.x) * (width / 10) + 1 + padding,
@@ -133,6 +144,7 @@ export const drawBoard = () => {
 
   ctx.globalAlpha = 0.5;
   const hardDropDistance = hardDropPos();
+  // Draw transparent piece preview
   current.shape.rotations[current.rotation % 4].forEach((block) => {
     ctx.fillRect(
       (block.x + current.position.x) * (width / 10) + 1 + padding,
