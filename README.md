@@ -2,7 +2,7 @@
 
 ## Preview
 
-<img src="https://github.com/lavalleeale/tetris/blob/main/preview.png?raw=true" height="200" />
+<img src="https://github.com/lavalleeale/tetris/blob/main/preview.png?raw=true" width="200" />
 
 ## What is this?
 
